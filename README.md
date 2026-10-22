@@ -284,7 +284,7 @@ mjx-go2-training/
 │   ├── export_deploy_terrains.py # 训练地形 -> 部署场景/manifest
 │   ├── widen_checkpoint.py       # net2wider：1024-512 -> 1536-768 精确等价扩展
 │   └── gpu_guard.sh              # 单 GPU 作业串行锁
-├── models/go2/                   # 地形资产：55 个 XML + 49 个 hfield/boxgrid + 机器人 mesh
+├── models/go2/                   # 地形资产：55 个 XML + 49 个 boxgrid 高度表 + hfield 纹理 + 机器人 mesh
 ├── models/go2_v33d_20m_logs/     # 本交付档的 orbax 检查点（best + 5M 间隔）
 ├── policies/go2_walk_v33d.pkl    # 交付策略参数（brax PPO，pickle）
 ├── logs/                         # 训练日志 + 评测 TSV（v33 全套可复现）
