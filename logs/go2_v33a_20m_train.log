@@ -1,0 +1,141 @@
+[15:43:43] 起点: /home/tc63/mujoco/mjx-go2-training/models/go2_v32_mixed_logs/checkpoints/best
+[15:43:43] ===== v33a_20m: 5000000 步, layers=1536,768 vly=1536,768, 地形 models/go2/scene_mjx_terrain_mixed1.xml =====
+[15:43:43] v28 权重: hip=-0.3 action_rate=-0.01 xy_angvel= orientation=-2.5 swing=0.18 edge=
+[15:43:43] v28 其它: ascent=2.0 cmd=-0.2,-0.3,-1.0~0.9,0.3,1.0 spawn_stairs=0
+backend: gpu
+v9 sb3_full: num_envs=2048, unroll=32, minibatch=2序列×32步=64条 (=SB3 的 64), updates/步=10240 次, 密度 6.4 样本/更新 (=SB3 的 6.4)
+v28 value_layers=(1536, 768) (policy=(1536, 768))
+v33 command mix: forward_prob=0.7 forward=[0.25, 0.0, -0.15]..[0.75, 0.0, 0.15]
+v30 curriculum: init_max=2 success>3.5m min<1.2m
+v5 hard_contact: 足端硬接触 (XML 原样) + Newton 20 迭代 / ls 10 (参考仓库物理)
+v11 指令条件化: 每 episode 采样 cmd ~ U([-0.2, -0.3, -1.0], [0.9, 0.3, 1.0])  (fixed=[0.5, 0.0, 0.0] 仅用于评估/可视化)
+v14 body_frame: 指令=机体系(朝向)速度, obs 的 base linevel 同步换机体系 (转向必需)
+v15 tilt_deg=17.5: 终止阈值放宽到等效 ±35° (参考档 10 → ±20°)
+v24 healthy_z_ref = feet
+v16 natural_gait: feet_slip=-0.5 (接触相足端速度² 惩罚), feet_height=-1.0 (摆动峰值抬到 0.08m), air_time_threshold=0.2 封顶 0.5s
+v17 dangle_penalty: feet_dangle=-0.5 (悬空超过 0.8s 逐步扣分, 封顶 2.0)
+v19 terrain: 地形场景 + 随机出生 (xy±5.0m, yaw 随机, z=地面+0.32m, 出生速度±0.3)
+v19 terrain_xml: models/go2/scene_mjx_terrain_mixed1.xml
+v26 R1: boxgrid_json=models/go2/assets/mixed1.json, contact_mode=clearance
+v19 height_scan: 7x5=35 点, x∈[-0.3,0.9] y∈[-0.4,0.4], base=0.268 scale=5.0 clip_m=0.35 noise=0.02m (仅 actor)  -> obs 48+35=83 (actor) / 154 (critic)
+v5 height_scan 几何: 17x11=187 点, x[-0.4,1.2] y[-0.5,0.5] (间距 0.100 x 0.100 m) -> obs 48+187=235 (actor) / 306 (critic)
+v6 lidar 遮挡模型: mount=[0.28945, 0.0, -0.046825] vfov=[-1.0472, 0.5236] ray_samples=4 self_occ=True dropout=0.05 occ_recall=0.5 sector=0.25/[0.6, 2.4] jit_mount=[0.02, 0.02, 0.02] jit_vfov=0.15 fill=0.0 -> actor scan 有盲区/空洞, critic 仍为完美扫描
+v19 push: 每 250 步推一次, 水平速度冲量 ±0.5 m/s
+v19 obs_noise: lin_vel±0.05 ang_vel±0.05 gravity±0.02 dof_pos±0.01 dof_vel±0.15 (仅 actor; critic 无噪)
+v3 obs_noise.lin_vel = 0.05 m/s (覆盖默认 0.05)
+v3 速度估计误差: bias±0.05 m/s, OU std=0.04 m/s tau=2.0s, delay 0..1 步 (20ms)  (仅 actor obs 0:3)
+v19 climb_reward: base_height=-200.0 (相对足下地形, 目标站高 0.268m; **平方**误差: 偏差 2cm=-0.08, 5cm=-0.5, 10cm=-2.0; 正常站立实测每步≈-0.0005)
+v19 soft_landing: feet_impact=-2.0, 阈值 0.5 m/s (落地 1.0m/s=-0.50, 1.5m/s=-2.00, 2.0m/s=-4.50 /足; 实测正常步态 95% 的时刻不触发)
+v20 注: feet_impact 已改为**按时间结算** (净空 < 0.09m 时每步考核向下速度), 不再是'只在落地帧' —— 修 §18.10.3 的激励漏洞
+v20 注: feet_height 已改为**摆动相均值**结算 (同源漏洞)
+v25 R2: gait_swing_height=0.18 (默认 0.15; max_foot_height 会在下面联动)
+v20 gait_phase: feet_phase=0.5 (对角 trot 相位 [0,pi,pi,0], 步频 1.8Hz, swing_height=0.18, sigma=0.02)
+     奖励 = exp(-Σ(足端净空 - rz(相位))²/0.02)
+     联动: max_foot_height=0.18 (feet_height 的抬脚目标, 与 swing_height 一致)
+     区分度自检: 理想trot=1.0000, 全贴地≈0.34, 全悬≈0.19 (gap≈0.66; 若 gap<0.15 奖励面太平, 推不动步态)
+v22 ascent: ascent=2.0 (每步 += W * clip(h_now - h_spawn, 0, 0.35))
+     为什么需要它: 原奖励面**没有任何一项**随「站得更高」增加 —— base_height 是相对量 (躯干离足下地面多高), 地形上爬升不改变它; 速度跟踪/相位/各项 cost 都与地形高度无关。
+     -> 绕开楼梯与爬上去收益**完全相同**, 而绕行更容易 -> 策略学会绕行。
+     实测依据: 把 v21 策略放在楼梯脚下正对楼梯, 走 2.0m 却横向漂移 1.4m 绕开, 最大爬升 4.7cm (sim/diag_v22_climb_test.py)
+     标定 (sim/probe_v22_reward_terms.py 实测每步均值): linear_vel_tracking=+1.76, feet_phase=+1.59, base_height=-0.30
+     v23 行进门控: ascent *= clip(|v_body|/0.2,0,1) -> 静止/站台顶不动 = 0 (站桩套利消失), 故 W 可提到 2.0; 无门控时 W>=4 就有站桩风险 (走路 +1.776 vs 站台顶 0.347+W*0.30)
+     信号稀疏性: 升高 >2cm 只占 1.8% 的步 (>10cm 占 0.0%) -> 每步均值小, 但梯度方向明确
+v22 base_height_ref=mean5 (默认): 参考面 = 躯干+4足 5 点均值, **与 v21 一致** -> 本轮唯一变量是 ascent
+v23 symmetry: symmetry=-0.4 beta=0.01 cap=2.0 (每步 -= W * EMA(镜像偏差), EMA 时间常数 100 步)
+v21 body_contact: body_contact=-150.0 (非足端碰撞体 = 小腿+大腿+躯干, 共 28 个几何)
+     形式 = -150.0 * min(Σ relu(margin−净空), 0.02m), margin=0.0m
+     margin=0 的含义 (**实测定标**): 平地沉降后的标称站姿, 28 个几何净空全为正 (最小 +2.2mm)
+       -> 正常姿态惩罚严格=0, 不会推歪姿势; 只有真穿透才扣分
+     标定依据 (sim/calib_penalty_form.py(已删除, 结论见实验记录), MuJoCo 接触判定):
+       大腿区触地率  v18(好)= 0.0%  v20(坏)= 6.6%  <- 干净判据
+       后腿穿透深度  v18=0.00055m  v20=0.00305m  (5.6x)
+       选线性不选平方: 区分度 4.07x vs 2.22x, 且浅穿透有梯度
+     上限 0.02m: 深穿透封顶, 避免惩罚压过正奖励把总奖励打 0
+       (总奖励 clip(·,0,·) -> 梯度归零, 是 v1-v7 的失败模式)
+v29 terminate_body_pen=0.02m (非足端净空 < -该值 -> 终止; PIE illegal_contact 等价)
+v28b hip_action: -0.3 (四髋动作目标偏离 home 平方和; cap=1.2) -> 现状 Σ≈0.6 -> -0.18/步 (直接梯度, 不经动力学)
+v28 hip_abduction: -0.3 (四髋偏离 home 平方和, 返回>=0, 权重为负)
+     动机: 实测 hip_q mean 29-33°/p95 42-47°, hip 动作 p95 1.2-1.5rad 顶到 ±1.047 限位; v20/v24/v25a/v25b 四个检查点完全一致 -> 奖励缺项
+     量级: 现状 Σ(q_hip-home)²≈0.7 -> -0.21/步 (正奖励 ~+2.3/步); 静止标称姿态严格为 0 (home 髋角 ∓0.1rad)
+     反套利: 权重过大会把总奖励压到 0 (PPO 梯度归零, v1-v7 失败模式)
+v28 reward 覆盖: action_rate=-0.01 xy_angular_vel=-0.05 orientation=-2.5 torque=-0.0002 joint_acc=-2.5e-07 feet_edge_thresh=0.08
+v29 stairs signals: progress=0.0 lazy_stop=-1.5 termination=-20.0 clearance=-0.6/0.1 reward_clip_min=-25.0
+预期 obs 维度: state=243  privileged_state=314  (含相位 8 维)
+优化: lr=4e-05 entropy_cost=0.0 clip=0.2 grad_clip=0.5 layers=(1536, 768) restore=/home/tc63/mujoco/mjx-go2-training/models/go2_v32_mixed_logs/checkpoints/best
+续训自检: restore=/home/tc63/mujoco/mjx-go2-training/models/go2_v32_mixed_logs/checkpoints/best
+  检查点 obs: state=[243] privileged_state=[314]  layers=[1536, 768]/[1536, 768]
+  本次 obs:   state=[243] privileged_state=[314]
+  维度一致 ✓
+  注意: brax checkpoint **不含优化器状态与步数** -> Adam 动量从零重建, num_steps 从 0 记。这是续训必须降 lr 的原因 (§9.2/§22)
+Warp 1.16.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.2
+   Devices:
+     "cpu"      : "CPU"
+     "cuda:0"   : "NVIDIA GeForce RTX 5060 Laptop GPU" (8 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /home/tc63/.cache/warp/1.16.0
+/home/tc63/mujoco/.venv/lib/python3.14/site-packages/mujoco/mjx/third_party/mujoco_warp/_src/io.py:705: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('HFIELD', 'CYLINDER'), ('HFIELD', 'BOX'), ('CYLINDER', 'CYLINDER'), ('CYLINDER', 'BOX')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[v25 feet_edge] 地形棱掩码: 0.0% 格点 (阈值 0.08m, 膨胀 1 格)
+[v26 R1] boxgrid: 26x26 gw=0.4m x0=-5.20 y0=-5.20 hmax=0.450m
+[v30 curriculum] levels=0..4 init_max=2 success>3.5m demote<1.2m
+[v28 spawn_entries] 5 个楼梯口出生点 (x,y,yaw)
+[v6 lidar] 自遮挡几何: 5 box + 13 capsule + 4 sphere (传感器 mount=[0.28940001130104065, 0.0, -0.046799998730421066])
+env: Go2Walk action_size=12
+v29 reset: full_reset=False num_resets_per_eval=0
+开始训练...
+Module mujoco.mjx.warp.ffi 7a22eb4 load on device 'cuda:0' took 1.45 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.smooth 2b7c7bf load on device 'cuda:0' took 9.43 ms  (cached)
+Module _nxn_broadphase__locals__kernel_a4692a31 a4692a3 load on device 'cuda:0' took 1.69 ms  (cached)
+Module ccd_hfield_kernel_builder__locals__ccd_hfield_kernel_cf40dd8d cf40dd8 load on device 'cuda:0' took 2.92 ms  (cached)
+Module ccd_hfield_kernel_builder__locals__ccd_hfield_kernel_1b37963c 1b37963 load on device 'cuda:0' took 2.35 ms  (cached)
+Module ccd_hfield_kernel_builder__locals__ccd_hfield_kernel_9760a421 9760a42 load on device 'cuda:0' took 2.19 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_e0e0d8da e0e0d8d load on device 'cuda:0' took 2.89 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_e0e0d8da eaba199 load on device 'cuda:0' took 2.97 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_66682041 6668204 load on device 'cuda:0' took 4.05 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_66682041 e02367e load on device 'cuda:0' took 2.54 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_0f7d0423 0f7d042 load on device 'cuda:0' took 4.20 ms  (cached)
+Module ccd_kernel_builder__locals__ccd_kernel_0f7d0423 1310460 load on device 'cuda:0' took 4.05 ms  (cached)
+Module _primitive_narrowphase__locals__primitive_narrowphase_ce765400 ce76540 load on device 'cuda:0' took 1.65 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.constraint 5b5fe2d load on device 'cuda:0' took 1.48 ms  (cached)
+Module _friction_dof__locals__kernel_79a5d781 79a5d78 load on device 'cuda:0' took 2.13 ms  (cached)
+Module _limit_slide_hinge__locals__kernel_2e9cb608 2e9cb60 load on device 'cuda:0' took 1.44 ms  (cached)
+Module _efc_contact_init__locals__kernel_f43ee60a f43ee60 load on device 'cuda:0' took 6.37 ms  (cached)
+Module _efc_contact_jac_dense__locals__kernel_d7c0e5ee db8e6f1 load on device 'cuda:0' took 1.51 ms  (cached)
+Module _efc_contact_update__locals__kernel_00a15590 00a1559 load on device 'cuda:0' took 1.80 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.sensor c64fb11 load on device 'cuda:0' took 3.23 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.forward 7b12154 load on device 'cuda:0' took 2.59 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.passive d8c18c6 load on device 'cuda:0' took 6.47 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.forward 8f02867 load on device 'cuda:0' took 2.71 ms  (cached)
+Module _qfrc_smooth__locals__kernel_b98573a2 b98573a load on device 'cuda:0' took 5.06 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.support 5a42e80 load on device 'cuda:0' took 1.75 ms  (cached)
+Module _tile_cholesky_factorize_solve_block__locals__kernel_ed258411 8277d35 load on device 'cuda:0' took 103.92 ms  (cached)
+Module _solve_init_dof__locals__kernel_61e8f84e 61e8f84 load on device 'cuda:0' took 2.16 ms  (cached)
+Module mujoco.mjx.third_party.mujoco_warp._src.solver b1463c9 load on device 'cuda:0' took 2.25 ms  (cached)
+Module _solve_init_jaref_kernel__locals__kernel_2b98d0c4 2b98d0c load on device 'cuda:0' took 2.25 ms  (cached)
+Module mul_m_kernel__locals___mul_m_8efe01a0 8efe01a load on device 'cuda:0' took 1.19 ms  (cached)
+Module _update_constraint_efc__locals__kernel_3b0c1177 3b0c117 load on device 'cuda:0' took 1.21 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_44c8eda8 44c8eda load on device 'cuda:0' took 1.62 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_52bae6b7 52bae6b load on device 'cuda:0' took 1.02 ms  (cached)
+Module _update_gradient_grad__locals__kernel_769b869e 769b869 load on device 'cuda:0' took 1.12 ms  (cached)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_4332d28d bc37e36 load on device 'cuda:0' took 2.60 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_06c68590 69571d1 load on device 'cuda:0' took 96.85 ms  (cached)
+Module _linesearch_iterative_kernel__locals__kernel_edbffb75 d7bf244 load on device 'cuda:0' took 3.07 ms  (cached)
+Module _contact_sort__locals__contact_sort_cfac0e09 66c1379 load on device 'cuda:0' took 1.99 ms  (cached)
+Module _next_time_builder__locals___next_time_a67f49d6 a67f49d load on device 'cuda:0' took 1.89 ms  (cached)
+0: eval_reward=319.584 ep_len=511.1 | loss=nan pi=nan vf=nan ent=nan fps=0 vis=0.36 info=0.60
+1310720: eval_reward=279.263 ep_len=528.8 | loss=nan pi=nan vf=nan ent=nan fps=2512 vis=0.35 info=0.60
+  [best] eval_reward=440.770 @ 2621440 → best/
+2621440: eval_reward=440.770 ep_len=565.5 | loss=nan pi=nan vf=nan ent=nan fps=2899 vis=0.36 info=0.61
+  [best] eval_reward=466.917 @ 3932160 → best/
+3932160: eval_reward=466.917 ep_len=524.5 | loss=nan pi=nan vf=nan ent=nan fps=3121 vis=0.37 info=0.61
+5242880: eval_reward=445.517 ep_len=576.2 | loss=nan pi=nan vf=nan ent=nan fps=3242 vis=0.36 info=0.61
+训练完成
+已保存策略: /home/tc63/mujoco/mjx-go2-training/train/../policies/go2_walk_v33a_20m.pkl
+best eval_reward=466.917 @ 3932160
+[16:10:50] v33a_20m 完成
+models/go2_v33a_20m_logs/checkpoints/000001310720/
+models/go2_v33a_20m_logs/checkpoints/000002621440/
+models/go2_v33a_20m_logs/checkpoints/000003932160/
+models/go2_v33a_20m_logs/checkpoints/000005242880/
+models/go2_v33a_20m_logs/checkpoints/best/

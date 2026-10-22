@@ -1,0 +1,117 @@
+{
+  "n": 128,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "v8",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.22000000000000003,
+  "h_mean": 0.04307701315124142,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "hardness": 1.1,
+  "layout": [
+    {
+      "row": 0,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 0.3,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.0761235086861068
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "type": "stairs",
+      "difficulty": 0.3,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.22000000000000003
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "type": "rough",
+      "difficulty": 0.3,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.04572562024027684
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 0.6,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.10098921624151083
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "type": "flat",
+      "difficulty": 0.6,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.0
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "type": "slope",
+      "difficulty": 0.6,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.1892
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 1.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.1265400561019299
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "type": "stairs",
+      "difficulty": 1.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.22000000000000003
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "type": "wave",
+      "difficulty": 1.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.11104998790563751
+    }
+  ],
+  "elevation": 0.25,
+  "cell_m": 0.09375,
+  "prefix": "terrain_v8"
+}

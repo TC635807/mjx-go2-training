@@ -1,0 +1,22 @@
+# Core runtime for MJX/brax training + MuJoCo viewer.
+# Developed and verified on Python 3.14 / CUDA 12 / RTX 5060 Laptop (8 GB), WSL2.
+#
+# GPU install: the versions below are what this repository was verified with.
+#   pip install -r requirements.txt --extra-index-url https://pypi.nvidia.com
+# If you prefer the official JAX CUDA wheels instead of jaxlib + nvidia-*:
+#   pip install "jax[cuda12]==0.7.2" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+jax==0.7.2
+jaxlib==0.7.2
+mujoco==3.12.0
+mujoco-mjx==3.12.0
+warp-lang==1.16.0
+brax==0.14.2
+playground==0.2.0          # the "mujoco_playground" distribution on PyPI
+flax==0.11.2
+optax==0.2.8
+orbax-checkpoint==0.12.4
+ml_collections==1.1.0
+numpy==2.5.2
+pillow==12.3.0
+pynput==1.8.1              # keyboard control in the interactive viewer
+tqdm==4.70.0

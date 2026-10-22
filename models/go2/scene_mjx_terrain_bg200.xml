@@ -1,0 +1,207 @@
+<mujoco model="go2 boxgeom terrain scene">
+  <!-- 由 sim/gen_terrain_boxgeom.py 生成, 不要手改。
+       176 个 box geom 组成离散方块场 (真竖面), 底面是平坦 hfield (全 0).
+       方格 0.40m, 高度 <= 0.130m, 场范围 6.0x6.0m。 -->
+  <include file="go2_mjx_position.xml"/>
+
+  <statistic center="0 0 0.1" extent="0.8" meansize="0.04"/>
+
+  <visual>
+    <rgba force="1 0 0 1"/>
+    <global azimuth="120" elevation="-20"/>
+    <map force="0.01"/>
+    <scale forcewidth="0.3" contactwidth="0.5" contactheight="0.2"/>
+    <quality shadowsize="8192"/>
+  </visual>
+
+  <asset>
+    <texture type="2d" name="mix_ground" builtin="checker" mark="edge"
+      rgb1="0.24 0.30 0.24" rgb2="0.16 0.20 0.17" markrgb="0.5 0.6 0.4"
+      width="300" height="300"/>
+    <material name="mix_ground" texture="mix_ground" texuniform="true" texrepeat="4 4" reflectance=".2"/>
+    <material name="box_mat" rgba="0.55 0.45 0.35 1"/>
+    <hfield name="terrain" file="bg200.png" size="6.0 6.0 0.0500 0.0960"/>
+  </asset>
+
+  <worldbody>
+    <!-- floor 名字不能改: 足端接触传感器绑定 geom2="floor" -->
+    <geom name="floor" type="hfield" hfield="terrain" material="mix_ground"
+      pos="0 0 0" friction="1.0 0.02 0.01"/>
+    <geom name="bx_000" type="box" pos="-3.8000 -2.6000 0.0617" size="0.2000 0.2000 0.0617" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_001" type="box" pos="-3.8000 -1.8000 0.0275" size="0.2000 0.2000 0.0275" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_002" type="box" pos="-3.8000 -1.4000 0.0538" size="0.2000 0.2000 0.0538" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_003" type="box" pos="-3.8000 -0.6000 0.0357" size="0.2000 0.2000 0.0357" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_004" type="box" pos="-3.8000 0.6000 0.0350" size="0.2000 0.2000 0.0350" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_005" type="box" pos="-3.8000 1.4000 0.0512" size="0.2000 0.2000 0.0512" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_006" type="box" pos="-3.8000 1.8000 0.0197" size="0.2000 0.2000 0.0197" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_007" type="box" pos="-3.8000 2.2000 0.0295" size="0.2000 0.2000 0.0295" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_008" type="box" pos="-3.8000 3.8000 0.0171" size="0.2000 0.2000 0.0171" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_009" type="box" pos="-3.4000 -3.4000 0.0182" size="0.2000 0.2000 0.0182" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_010" type="box" pos="-3.4000 -3.0000 0.0315" size="0.2000 0.2000 0.0315" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_011" type="box" pos="-3.4000 -2.2000 0.0625" size="0.2000 0.2000 0.0625" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_012" type="box" pos="-3.4000 -1.4000 0.0352" size="0.2000 0.2000 0.0352" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_013" type="box" pos="-3.4000 -1.0000 0.0180" size="0.2000 0.2000 0.0180" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_014" type="box" pos="-3.4000 -0.2000 0.0630" size="0.2000 0.2000 0.0630" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_015" type="box" pos="-3.4000 0.2000 0.0335" size="0.2000 0.2000 0.0335" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_016" type="box" pos="-3.4000 0.6000 0.0075" size="0.2000 0.2000 0.0075" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_017" type="box" pos="-3.4000 1.0000 0.0405" size="0.2000 0.2000 0.0405" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_018" type="box" pos="-3.4000 3.0000 0.0344" size="0.2000 0.2000 0.0344" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_019" type="box" pos="-3.4000 3.4000 0.0299" size="0.2000 0.2000 0.0299" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_020" type="box" pos="-3.0000 -3.8000 0.0417" size="0.2000 0.2000 0.0417" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_021" type="box" pos="-3.0000 -2.6000 0.0169" size="0.2000 0.2000 0.0169" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_022" type="box" pos="-3.0000 -1.4000 0.0332" size="0.2000 0.2000 0.0332" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_023" type="box" pos="-3.0000 -0.2000 0.0533" size="0.2000 0.2000 0.0533" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_024" type="box" pos="-3.0000 0.2000 0.0444" size="0.2000 0.2000 0.0444" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_025" type="box" pos="-3.0000 1.0000 0.0125" size="0.2000 0.2000 0.0125" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_026" type="box" pos="-3.0000 1.8000 0.0124" size="0.2000 0.2000 0.0124" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_027" type="box" pos="-3.0000 3.4000 0.0570" size="0.2000 0.2000 0.0570" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_028" type="box" pos="-3.0000 3.8000 0.0307" size="0.2000 0.2000 0.0307" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_029" type="box" pos="-2.6000 -3.0000 0.0420" size="0.2000 0.2000 0.0420" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_030" type="box" pos="-2.6000 -2.2000 0.0543" size="0.2000 0.2000 0.0543" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_031" type="box" pos="-2.6000 0.6000 0.0313" size="0.2000 0.2000 0.0313" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_032" type="box" pos="-2.6000 3.0000 0.0597" size="0.2000 0.2000 0.0597" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_033" type="box" pos="-2.6000 3.4000 0.0537" size="0.2000 0.2000 0.0537" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_034" type="box" pos="-2.6000 3.8000 0.0576" size="0.2000 0.2000 0.0576" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_035" type="box" pos="-2.2000 -3.4000 0.0160" size="0.2000 0.2000 0.0160" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_036" type="box" pos="-2.2000 -3.0000 0.0500" size="0.2000 0.2000 0.0500" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_037" type="box" pos="-2.2000 -2.6000 0.0138" size="0.2000 0.2000 0.0138" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_038" type="box" pos="-2.2000 -2.2000 0.0540" size="0.2000 0.2000 0.0540" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_039" type="box" pos="-2.2000 -1.4000 0.0537" size="0.2000 0.2000 0.0537" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_040" type="box" pos="-2.2000 -1.0000 0.0107" size="0.2000 0.2000 0.0107" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_041" type="box" pos="-2.2000 -0.6000 0.0244" size="0.2000 0.2000 0.0244" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_042" type="box" pos="-2.2000 0.2000 0.0449" size="0.2000 0.2000 0.0449" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_043" type="box" pos="-2.2000 1.0000 0.0258" size="0.2000 0.2000 0.0258" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_044" type="box" pos="-2.2000 3.0000 0.0412" size="0.2000 0.2000 0.0412" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_045" type="box" pos="-1.8000 -3.8000 0.0425" size="0.2000 0.2000 0.0425" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_046" type="box" pos="-1.8000 -3.4000 0.0280" size="0.2000 0.2000 0.0280" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_047" type="box" pos="-1.8000 -3.0000 0.0564" size="0.2000 0.2000 0.0564" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_048" type="box" pos="-1.8000 -2.2000 0.0527" size="0.2000 0.2000 0.0527" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_049" type="box" pos="-1.8000 -1.8000 0.0222" size="0.2000 0.2000 0.0222" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_050" type="box" pos="-1.8000 -1.4000 0.0353" size="0.2000 0.2000 0.0353" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_051" type="box" pos="-1.8000 -0.6000 0.0647" size="0.2000 0.2000 0.0647" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_052" type="box" pos="-1.8000 -0.2000 0.0158" size="0.2000 0.2000 0.0158" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_053" type="box" pos="-1.8000 0.2000 0.0167" size="0.2000 0.2000 0.0167" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_054" type="box" pos="-1.8000 1.4000 0.0496" size="0.2000 0.2000 0.0496" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_055" type="box" pos="-1.8000 3.4000 0.0432" size="0.2000 0.2000 0.0432" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_056" type="box" pos="-1.8000 3.8000 0.0296" size="0.2000 0.2000 0.0296" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_057" type="box" pos="-1.4000 -3.8000 0.0381" size="0.2000 0.2000 0.0381" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_058" type="box" pos="-1.4000 -3.0000 0.0472" size="0.2000 0.2000 0.0472" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_059" type="box" pos="-1.4000 -2.6000 0.0237" size="0.2000 0.2000 0.0237" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_060" type="box" pos="-1.4000 -1.8000 0.0239" size="0.2000 0.2000 0.0239" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_061" type="box" pos="-1.4000 -1.0000 0.0132" size="0.2000 0.2000 0.0132" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_062" type="box" pos="-1.4000 -0.6000 0.0184" size="0.2000 0.2000 0.0184" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_063" type="box" pos="-1.4000 0.2000 0.0203" size="0.2000 0.2000 0.0203" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_064" type="box" pos="-1.4000 1.4000 0.0504" size="0.2000 0.2000 0.0504" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_065" type="box" pos="-1.4000 1.8000 0.0514" size="0.2000 0.2000 0.0514" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_066" type="box" pos="-1.4000 3.4000 0.0448" size="0.2000 0.2000 0.0448" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_067" type="box" pos="-1.0000 -0.6000 0.0342" size="0.2000 0.2000 0.0342" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_068" type="box" pos="-1.0000 -0.2000 0.0097" size="0.2000 0.2000 0.0097" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_069" type="box" pos="-1.0000 1.0000 0.0192" size="0.2000 0.2000 0.0192" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_070" type="box" pos="-1.0000 1.8000 0.0081" size="0.2000 0.2000 0.0081" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_071" type="box" pos="-1.0000 2.6000 0.0122" size="0.2000 0.2000 0.0122" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_072" type="box" pos="-1.0000 3.0000 0.0255" size="0.2000 0.2000 0.0255" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_073" type="box" pos="-1.0000 3.4000 0.0151" size="0.2000 0.2000 0.0151" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_074" type="box" pos="-1.0000 3.8000 0.0547" size="0.2000 0.2000 0.0547" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_075" type="box" pos="-0.6000 -3.8000 0.0254" size="0.2000 0.2000 0.0254" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_076" type="box" pos="-0.6000 -3.4000 0.0634" size="0.2000 0.2000 0.0634" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_077" type="box" pos="-0.6000 -3.0000 0.0406" size="0.2000 0.2000 0.0406" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_078" type="box" pos="-0.6000 -1.8000 0.0201" size="0.2000 0.2000 0.0201" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_079" type="box" pos="-0.6000 1.0000 0.0417" size="0.2000 0.2000 0.0417" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_080" type="box" pos="-0.6000 2.2000 0.0327" size="0.2000 0.2000 0.0327" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_081" type="box" pos="-0.6000 3.0000 0.0321" size="0.2000 0.2000 0.0321" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_082" type="box" pos="-0.6000 3.8000 0.0186" size="0.2000 0.2000 0.0186" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_083" type="box" pos="-0.2000 -3.4000 0.0288" size="0.2000 0.2000 0.0288" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_084" type="box" pos="-0.2000 1.0000 0.0236" size="0.2000 0.2000 0.0236" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_085" type="box" pos="-0.2000 1.4000 0.0495" size="0.2000 0.2000 0.0495" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_086" type="box" pos="-0.2000 2.2000 0.0290" size="0.2000 0.2000 0.0290" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_087" type="box" pos="-0.2000 3.0000 0.0310" size="0.2000 0.2000 0.0310" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_088" type="box" pos="-0.2000 3.4000 0.0083" size="0.2000 0.2000 0.0083" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_089" type="box" pos="-0.2000 3.8000 0.0145" size="0.2000 0.2000 0.0145" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_090" type="box" pos="0.2000 -3.8000 0.0365" size="0.2000 0.2000 0.0365" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_091" type="box" pos="0.2000 -3.4000 0.0252" size="0.2000 0.2000 0.0252" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_092" type="box" pos="0.2000 -2.2000 0.0560" size="0.2000 0.2000 0.0560" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_093" type="box" pos="0.2000 -1.8000 0.0476" size="0.2000 0.2000 0.0476" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_094" type="box" pos="0.2000 -1.4000 0.0391" size="0.2000 0.2000 0.0391" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_095" type="box" pos="0.2000 -1.0000 0.0187" size="0.2000 0.2000 0.0187" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_096" type="box" pos="0.2000 3.0000 0.0121" size="0.2000 0.2000 0.0121" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_097" type="box" pos="0.2000 3.4000 0.0439" size="0.2000 0.2000 0.0439" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_098" type="box" pos="0.6000 -3.4000 0.0619" size="0.2000 0.2000 0.0619" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_099" type="box" pos="0.6000 -3.0000 0.0100" size="0.2000 0.2000 0.0100" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_100" type="box" pos="0.6000 -2.6000 0.0332" size="0.2000 0.2000 0.0332" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_101" type="box" pos="0.6000 -1.8000 0.0466" size="0.2000 0.2000 0.0466" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_102" type="box" pos="0.6000 -1.4000 0.0180" size="0.2000 0.2000 0.0180" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_103" type="box" pos="0.6000 -1.0000 0.0087" size="0.2000 0.2000 0.0087" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_104" type="box" pos="0.6000 1.4000 0.0622" size="0.2000 0.2000 0.0622" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_105" type="box" pos="0.6000 2.6000 0.0437" size="0.2000 0.2000 0.0437" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_106" type="box" pos="0.6000 3.0000 0.0549" size="0.2000 0.2000 0.0549" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_107" type="box" pos="0.6000 3.4000 0.0610" size="0.2000 0.2000 0.0610" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_108" type="box" pos="1.0000 -3.0000 0.0061" size="0.2000 0.2000 0.0061" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_109" type="box" pos="1.0000 -2.6000 0.0390" size="0.2000 0.2000 0.0390" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_110" type="box" pos="1.0000 -1.8000 0.0172" size="0.2000 0.2000 0.0172" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_111" type="box" pos="1.0000 -1.4000 0.0187" size="0.2000 0.2000 0.0187" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_112" type="box" pos="1.0000 1.0000 0.0279" size="0.2000 0.2000 0.0279" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_113" type="box" pos="1.0000 1.4000 0.0445" size="0.2000 0.2000 0.0445" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_114" type="box" pos="1.0000 1.8000 0.0102" size="0.2000 0.2000 0.0102" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_115" type="box" pos="1.0000 3.8000 0.0270" size="0.2000 0.2000 0.0270" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_116" type="box" pos="1.4000 -1.4000 0.0060" size="0.2000 0.2000 0.0060" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_117" type="box" pos="1.4000 -1.0000 0.0626" size="0.2000 0.2000 0.0626" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_118" type="box" pos="1.4000 -0.2000 0.0220" size="0.2000 0.2000 0.0220" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_119" type="box" pos="1.4000 0.2000 0.0086" size="0.2000 0.2000 0.0086" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_120" type="box" pos="1.4000 1.0000 0.0220" size="0.2000 0.2000 0.0220" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_121" type="box" pos="1.4000 1.4000 0.0568" size="0.2000 0.2000 0.0568" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_122" type="box" pos="1.4000 1.8000 0.0272" size="0.2000 0.2000 0.0272" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_123" type="box" pos="1.4000 3.4000 0.0076" size="0.2000 0.2000 0.0076" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_124" type="box" pos="1.8000 -3.0000 0.0411" size="0.2000 0.2000 0.0411" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_125" type="box" pos="1.8000 -1.8000 0.0525" size="0.2000 0.2000 0.0525" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_126" type="box" pos="1.8000 -0.2000 0.0450" size="0.2000 0.2000 0.0450" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_127" type="box" pos="1.8000 0.2000 0.0106" size="0.2000 0.2000 0.0106" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_128" type="box" pos="1.8000 1.8000 0.0420" size="0.2000 0.2000 0.0420" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_129" type="box" pos="1.8000 2.6000 0.0227" size="0.2000 0.2000 0.0227" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_130" type="box" pos="1.8000 3.0000 0.0491" size="0.2000 0.2000 0.0491" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_131" type="box" pos="2.2000 -3.4000 0.0358" size="0.2000 0.2000 0.0358" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_132" type="box" pos="2.2000 -3.0000 0.0362" size="0.2000 0.2000 0.0362" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_133" type="box" pos="2.2000 -2.2000 0.0276" size="0.2000 0.2000 0.0276" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_134" type="box" pos="2.2000 -1.8000 0.0374" size="0.2000 0.2000 0.0374" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_135" type="box" pos="2.2000 -1.4000 0.0628" size="0.2000 0.2000 0.0628" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_136" type="box" pos="2.2000 -0.6000 0.0544" size="0.2000 0.2000 0.0544" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_137" type="box" pos="2.2000 0.6000 0.0364" size="0.2000 0.2000 0.0364" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_138" type="box" pos="2.2000 1.4000 0.0163" size="0.2000 0.2000 0.0163" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_139" type="box" pos="2.2000 1.8000 0.0260" size="0.2000 0.2000 0.0260" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_140" type="box" pos="2.2000 2.2000 0.0616" size="0.2000 0.2000 0.0616" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_141" type="box" pos="2.2000 2.6000 0.0422" size="0.2000 0.2000 0.0422" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_142" type="box" pos="2.2000 3.0000 0.0380" size="0.2000 0.2000 0.0380" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_143" type="box" pos="2.6000 -3.8000 0.0137" size="0.2000 0.2000 0.0137" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_144" type="box" pos="2.6000 -1.4000 0.0416" size="0.2000 0.2000 0.0416" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_145" type="box" pos="2.6000 0.2000 0.0177" size="0.2000 0.2000 0.0177" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_146" type="box" pos="2.6000 1.4000 0.0174" size="0.2000 0.2000 0.0174" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_147" type="box" pos="2.6000 1.8000 0.0184" size="0.2000 0.2000 0.0184" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_148" type="box" pos="2.6000 2.2000 0.0536" size="0.2000 0.2000 0.0536" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_149" type="box" pos="2.6000 2.6000 0.0485" size="0.2000 0.2000 0.0485" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_150" type="box" pos="2.6000 3.0000 0.0082" size="0.2000 0.2000 0.0082" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_151" type="box" pos="3.0000 -3.4000 0.0408" size="0.2000 0.2000 0.0408" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_152" type="box" pos="3.0000 -2.2000 0.0321" size="0.2000 0.2000 0.0321" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_153" type="box" pos="3.0000 -1.0000 0.0352" size="0.2000 0.2000 0.0352" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_154" type="box" pos="3.0000 1.0000 0.0335" size="0.2000 0.2000 0.0335" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_155" type="box" pos="3.0000 2.2000 0.0315" size="0.2000 0.2000 0.0315" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_156" type="box" pos="3.0000 3.0000 0.0405" size="0.2000 0.2000 0.0405" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_157" type="box" pos="3.4000 -3.0000 0.0538" size="0.2000 0.2000 0.0538" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_158" type="box" pos="3.4000 -2.2000 0.0601" size="0.2000 0.2000 0.0601" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_159" type="box" pos="3.4000 -1.8000 0.0432" size="0.2000 0.2000 0.0432" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_160" type="box" pos="3.4000 -0.6000 0.0286" size="0.2000 0.2000 0.0286" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_161" type="box" pos="3.4000 0.2000 0.0248" size="0.2000 0.2000 0.0248" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_162" type="box" pos="3.4000 1.4000 0.0230" size="0.2000 0.2000 0.0230" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_163" type="box" pos="3.4000 1.8000 0.0353" size="0.2000 0.2000 0.0353" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_164" type="box" pos="3.4000 2.2000 0.0278" size="0.2000 0.2000 0.0278" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_165" type="box" pos="3.4000 3.4000 0.0449" size="0.2000 0.2000 0.0449" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_166" type="box" pos="3.8000 -3.8000 0.0232" size="0.2000 0.2000 0.0232" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_167" type="box" pos="3.8000 -3.4000 0.0614" size="0.2000 0.2000 0.0614" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_168" type="box" pos="3.8000 -3.0000 0.0528" size="0.2000 0.2000 0.0528" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_169" type="box" pos="3.8000 -1.8000 0.0310" size="0.2000 0.2000 0.0310" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_170" type="box" pos="3.8000 -1.4000 0.0251" size="0.2000 0.2000 0.0251" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_171" type="box" pos="3.8000 -0.6000 0.0163" size="0.2000 0.2000 0.0163" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_172" type="box" pos="3.8000 -0.2000 0.0065" size="0.2000 0.2000 0.0065" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_173" type="box" pos="3.8000 0.2000 0.0310" size="0.2000 0.2000 0.0310" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_174" type="box" pos="3.8000 1.4000 0.0642" size="0.2000 0.2000 0.0642" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+    <geom name="bx_175" type="box" pos="3.8000 2.6000 0.0529" size="0.2000 0.2000 0.0529" material="box_mat" contype="1" conaffinity="1" friction="0.9 0.02 0.01"/>
+  </worldbody>
+</mujoco>

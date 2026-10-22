@@ -1,0 +1,326 @@
+<mujoco model="go2">
+  <!-- Go2 MJX 训练模型 (位置控制) —— 从部署模型 mjx-go2-mujoco2ros2/models/go2/go2.xml 派生。
+
+       与部署基线的**全部差异** (逐条, 物理参数一个没改):
+       1. **四条腿的 body 顺序重排为 FR, FL, RR, RL** (基线文档顺序是 FL,FR,RL,RR)。
+          物理参数逐项相同, 只改兄弟腿的排列。原因: 全项目冻结契约
+          (mjx-go2-mujoco2ros2/docs/interfaces.md §0) 与 envs/go2_walk.py 的
+          FEET=["FR","FL","RR","RL"] / qpos[...,7:].reshape(4,3) / trot 相位
+          [0,pi,pi,0] / sym_ema 块索引都按 FR,FL,RR,RL。qpos 顺序 = 树顺序,
+          必须与部署侧 MOTOR_JOINTS 一致, 否则 obs 的 qpos 段静默错位。
+       2. **actuator 由 <motor> 换成 <position kp="20" kv="1">**, 且顺序同样是
+          FR,FL,RR,RL (与 body 树/关节顺序一致, 这样 ctrl、qpos[7:]、action 三者同序)。
+          ctrlrange = 关节限位 (不是力矩限位), forcerange = 力矩限位。
+          理由: 部署侧 tau = kp*(q_des-q) + kd*(dq_des-dq), kp=20 kd=1,
+          与 <position kp=20 kv=1> 严格等价 —— 这是 train/deploy 一致性的基础。
+          分类 abduction / front_hip / back_hip / knee: Go2 前后腿 thigh 限位不同,
+          必须分开 (front [-1.5708,3.4907] / back [-0.5236,4.5379])。
+       3. **足端软接触**: 足端 geom solimp=[0.9,0.95,0.023,0.5,2.0], condim=3
+          (基线是硬接触 solimp 默认 + condim=6)。MJX 迭代求解器下硬接触高速
+          撞击会发散 NaN (Go1 的实测教训)。env 的 foot_soft_contact=False 可在
+          运行时改回硬接触语义。
+       4. **新增 sensor 段** (基线只有 jointpos/jointvel/torque/imu_quat):
+          gyro / local_linvel / accelerometer / global_linvel / global_angvel /
+          upvector / 每足 {FR,FL,RR,RL}_global_linvel / 每足 {F}_floor_found。
+          env 的 _get_obs 与足端奖励全靠这些名字索引。
+       5. **新增 4 个足端 site**: name=FR/FL/RR/RL, 与同名足端碰撞 geom 同位
+          (calf 系 pos="-0.002 0 -0.213")。site 与 geom 命名空间不同, 同名不冲突。
+          基线里足端只有 geom; env 的 _feet_site_id 与 {F}_global_linvel 需要 site。
+       6. **keyframe home 换成 Go2 姿态**: z=0.32, hip FL/RL=+0.1 FR/RR=-0.1,
+          前腿 thigh 0.8, 后腿 thigh 1.0, calf 全 -1.5 (unitree_rl_gym 开源惯例)。
+          基线 keyframe 是每腿 0,0.9,-1.8 (那是部署侧的站立姿态, 不是训练姿态)。
+
+       7. **geom margin 全部置 0** (基线默认类是 margin="0.001")。
+          原因 (实测): warp 后端的 put_model 在 MULTICCD 打开时拒绝任何带非零
+          margin 的 CCD 接触对 —— 直接用基线的 margin="0.001" 会抛
+          `NotImplementedError: geom pair (6, 14) has non-zero margin ((0.001, 0.001))
+          with MULTICCD enabled. Set margin to 0 or disable MULTICCD.`, 训练起不来
+          (Go1 训练模型 go1_mjx_position.xml 根本没有 margin, 所以从没踩到)。
+          1mm margin 只影响 1mm 以内的接触生成, 对物理/奖励无实质影响。
+          这是训练模型与部署基线之间**唯一的数值差异**, 已记录在
+          docs/go2-model-report.md, parity 检查时请按此口径对比。
+
+       保留基线的: 质量/惯量 (总 15.206kg)、全部 mesh 与碰撞几何、关节限位、
+       damping=0.1 armature=0.01 frictionloss=0.2、cone=elliptic impratio=100、
+       autolimits=true、足端 friction="0.4 0.02 0.01" priority=1。
+
+       自检: /home/tc63/mujoco/.venv/bin/python sim/check_go2_model_contract.py
+       报告: docs/go2-model-report.md -->
+  <compiler angle="radian" meshdir="assets" autolimits="true" />
+
+  <option cone="elliptic" impratio="100" />
+
+  <default>
+    <default class="go2">
+      <geom friction="0.4" margin="0" condim="1"/>
+      <joint axis="0 1 0" damping="0.1" armature="0.01" frictionloss="0.2"/>
+      <position kp="20" kv="1" forcerange="-23.7 23.7"/>
+      <default class="abduction">
+        <joint axis="1 0 0" range="-1.0472 1.0472"/>
+        <position ctrlrange="-1.0472 1.0472"/>
+      </default>
+      <default class="front_hip">
+        <joint range="-1.5708 3.4907"/>
+        <position ctrlrange="-1.5708 3.4907"/>
+      </default>
+      <default class="back_hip">
+        <joint range="-0.5236 4.5379"/>
+        <position ctrlrange="-0.5236 4.5379"/>
+      </default>
+      <default class="knee">
+        <joint range="-2.7227 -0.83776"/>
+        <position forcerange="-45.43 45.43" ctrlrange="-2.7227 -0.83776"/>
+      </default>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="collision">
+        <geom group="3"/>
+        <!-- 足端接触: 与部署模型 mjx-go2-mujoco2ros2/models/go2/go2.xml 逐项一致
+             (condim=6, 不写 solimp -> MuJoCo 默认 0.9/0.95/0.001/0.5/2.0,
+             friction 0.4/0.02/0.01, priority=1)。本文件里的值只在 --hard_contact 档
+             生效: 默认档 (foot_soft_contact=True) 会在 env 里被覆盖成
+             condim=3 + solimp 0.9/0.95/0.023/0.5/2.0。
+             改用硬接触的依据: 33M 软接触策略在 warp(训练物理) 里中位存活 662 步,
+             在 CPU MuJoCo(100/50) 里只有 128 步 —— 6 倍 sim-to-sim gap;
+             Go1 已实测 warp 硬接触与 CPU 逐位一致 (diag_hard_contact)。 -->
+        <default class="foot">
+          <geom size="0.022" pos="-0.002 0 -0.213" priority="1" condim="6"
+            friction="0.4 0.02 0.01"/>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <material name="metal" rgba=".9 .95 .95 1" />
+    <material name="black" rgba="0 0 0 1" />
+    <material name="white" rgba="1 1 1 1" />
+    <material name="gray" rgba="0.671705 0.692426 0.774270 1" />
+
+    <mesh file="base_0.obj" />
+    <mesh file="base_1.obj" />
+    <mesh file="base_2.obj" />
+    <mesh file="base_3.obj" />
+    <mesh file="base_4.obj" />
+    <mesh file="hip_0.obj" />
+    <mesh file="hip_1.obj" />
+    <mesh file="thigh_0.obj" />
+    <mesh file="thigh_1.obj" />
+    <mesh file="thigh_mirror_0.obj" />
+    <mesh file="thigh_mirror_1.obj" />
+    <mesh file="calf_0.obj" />
+    <mesh file="calf_1.obj" />
+    <mesh file="calf_mirror_0.obj" />
+    <mesh file="calf_mirror_1.obj" />
+    <mesh file="foot.obj" />
+  </asset>
+
+  <worldbody>
+    <body name="base_link" pos="0 0 0.445" childclass="go2">
+      <inertial pos="0.021112 0 -0.005366" quat="-0.000543471 0.713435 -0.00173769 0.700719"
+        mass="6.921"
+        diaginertia="0.107027 0.0980771 0.0244531" />
+      <freejoint />
+      <geom mesh="base_0" material="black" class="visual" />
+      <geom mesh="base_1" material="black" class="visual" />
+      <geom mesh="base_2" material="black" class="visual" />
+      <geom mesh="base_3" material="white" class="visual" />
+      <geom mesh="base_4" material="gray" class="visual" />
+      <geom size="0.1881 0.04675 0.057" type="box" class="collision" />
+      <geom size="0.05 0.045" pos="0.285 0 0.01" type="cylinder" class="collision" />
+      <geom size="0.047" pos="0.293 0 -0.06" class="collision" />
+      <site name="imu" pos="-0.02557 0 0.04232" />
+      <body name="FR_hip" pos="0.1934 -0.0465 0">
+        <inertial pos="-0.0054 -0.00194 -0.000105" quat="0.498237 0.505462 0.499245 0.497014"
+          mass="0.678"
+          diaginertia="0.00088403 0.000596003 0.000479967" />
+        <joint name="FR_hip_joint" class="abduction" />
+        <geom mesh="hip_0" material="metal" class="visual" quat="4.63268e-05 1 0 0" />
+        <geom mesh="hip_1" material="gray" class="visual" quat="4.63268e-05 1 0 0" />
+        <geom size="0.046 0.02" pos="0 -0.08 0" quat="0.707107 0.707107 0 0" type="cylinder"
+          class="collision" />
+        <body name="FR_thigh" pos="0 -0.0955 0">
+          <inertial pos="-0.00374 0.0223 -0.0327" quat="0.551623 -0.0200632 0.0847635 0.829533"
+            mass="1.152"
+            diaginertia="0.00594973 0.00584149 0.000878787" />
+          <joint name="FR_thigh_joint" class="front_hip" />
+          <geom mesh="thigh_mirror_0" material="metal" class="visual" />
+          <geom mesh="thigh_mirror_1" material="gray" class="visual" />
+          <geom size="0.1065 0.01225 0.017" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0"
+            type="box" class="collision" />
+          <body name="FR_calf" pos="0 0 -0.213">
+            <inertial pos="0.00629595 0.000622121 -0.141417"
+              quat="0.703508 -0.00450087 0.00154099 0.710672"
+              mass="0.241352" diaginertia="0.0014901 0.00146356 5.31397e-05" />
+            <joint name="FR_calf_joint" class="knee" />
+            <geom mesh="calf_mirror_0" material="gray" class="visual" />
+            <geom mesh="calf_mirror_1" material="black" class="visual" />
+            <geom size="0.013 0.06" pos="0.01 0 -0.06" quat="0.995004 0 -0.0998334 0"
+              type="cylinder" class="collision" />
+            <geom size="0.011 0.0325" pos="0.02 0 -0.148" quat="0.999688 0 0.0249974 0"
+              type="cylinder" class="collision" />
+            <geom pos="0 0 -0.213" mesh="foot" class="visual" material="black" />
+            <geom name="FR" class="foot" />
+            <site name="FR" pos="-0.002 0 -0.213" type="sphere" size="0.022" group="5" />
+            <body name="FR_foot" pos="0 0 -0.213" />
+          </body>
+        </body>
+      </body>
+      <body name="FL_hip" pos="0.1934 0.0465 0">
+        <inertial pos="-0.0054 0.00194 -0.000105" quat="0.497014 0.499245 0.505462 0.498237"
+          mass="0.678"
+          diaginertia="0.00088403 0.000596003 0.000479967" />
+        <joint name="FL_hip_joint" class="abduction" />
+        <geom mesh="hip_0" material="metal" class="visual" />
+        <geom mesh="hip_1" material="gray" class="visual" />
+        <geom size="0.046 0.02" pos="0 0.08 0" quat="1 1 0 0" type="cylinder" class="collision" />
+        <body name="FL_thigh" pos="0 0.0955 0">
+          <inertial pos="-0.00374 -0.0223 -0.0327" quat="0.829533 0.0847635 -0.0200632 0.551623"
+            mass="1.152"
+            diaginertia="0.00594973 0.00584149 0.000878787" />
+          <joint name="FL_thigh_joint" class="front_hip" />
+          <geom mesh="thigh_0" material="metal" class="visual" />
+          <geom mesh="thigh_1" material="gray" class="visual" />
+          <geom size="0.1065 0.01225 0.017" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0"
+            type="box" class="collision" />
+          <body name="FL_calf" pos="0 0 -0.213">
+            <inertial pos="0.00629595 -0.000622121 -0.141417"
+              quat="0.710672 0.00154099 -0.00450087 0.703508"
+              mass="0.241352" diaginertia="0.0014901 0.00146356 5.31397e-05" />
+            <joint name="FL_calf_joint" class="knee" />
+            <geom mesh="calf_0" material="gray" class="visual" />
+            <geom mesh="calf_1" material="black" class="visual" />
+            <geom size="0.012 0.06" pos="0.008 0 -0.06" quat="0.994493 0 -0.104807 0"
+              type="cylinder" class="collision" />
+            <geom size="0.011 0.0325" pos="0.02 0 -0.148" quat="0.999688 0 0.0249974 0"
+              type="cylinder" class="collision" />
+            <geom pos="0 0 -0.213" mesh="foot" class="visual" material="black" />
+            <geom name="FL" class="foot" />
+            <site name="FL" pos="-0.002 0 -0.213" type="sphere" size="0.022" group="5" />
+            <body name="FL_foot" pos="0 0 -0.213" />
+          </body>
+        </body>
+      </body>
+      <body name="RR_hip" pos="-0.1934 -0.0465 0">
+        <inertial pos="0.0054 -0.00194 -0.000105" quat="0.499245 0.497014 0.498237 0.505462"
+          mass="0.678"
+          diaginertia="0.00088403 0.000596003 0.000479967" />
+        <joint name="RR_hip_joint" class="abduction" />
+        <geom mesh="hip_0" material="metal" class="visual"
+          quat="2.14617e-09 4.63268e-05 4.63268e-05 -1" />
+        <geom mesh="hip_1" material="gray" class="visual"
+          quat="2.14617e-09 4.63268e-05 4.63268e-05 -1" />
+        <geom size="0.046 0.02" pos="0 -0.08 0" quat="0.707107 0.707107 0 0" type="cylinder"
+          class="collision" />
+        <body name="RR_thigh" pos="0 -0.0955 0">
+          <inertial pos="-0.00374 0.0223 -0.0327" quat="0.551623 -0.0200632 0.0847635 0.829533"
+            mass="1.152"
+            diaginertia="0.00594973 0.00584149 0.000878787" />
+          <joint name="RR_thigh_joint" class="back_hip" />
+          <geom mesh="thigh_mirror_0" material="metal" class="visual" />
+          <geom mesh="thigh_mirror_1" material="gray" class="visual" />
+          <geom size="0.1065 0.01225 0.017" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0"
+            type="box" class="collision" />
+          <body name="RR_calf" pos="0 0 -0.213">
+            <inertial pos="0.00629595 0.000622121 -0.141417"
+              quat="0.703508 -0.00450087 0.00154099 0.710672"
+              mass="0.241352" diaginertia="0.0014901 0.00146356 5.31397e-05" />
+            <joint name="RR_calf_joint" class="knee" />
+            <geom mesh="calf_mirror_0" material="gray" class="visual" />
+            <geom mesh="calf_mirror_1" material="black" class="visual" />
+            <geom size="0.013 0.06" pos="0.01 0 -0.06" quat="0.995004 0 -0.0998334 0"
+              type="cylinder" class="collision" />
+            <geom size="0.011 0.0325" pos="0.02 0 -0.148" quat="0.999688 0 0.0249974 0"
+              type="cylinder" class="collision" />
+            <geom pos="0 0 -0.213" mesh="foot" class="visual" material="black" />
+            <geom name="RR" class="foot" />
+            <site name="RR" pos="-0.002 0 -0.213" type="sphere" size="0.022" group="5" />
+            <body name="RR_foot" pos="0 0 -0.213" />
+          </body>
+        </body>
+      </body>
+      <body name="RL_hip" pos="-0.1934 0.0465 0">
+        <inertial pos="0.0054 0.00194 -0.000105" quat="0.505462 0.498237 0.497014 0.499245"
+          mass="0.678"
+          diaginertia="0.00088403 0.000596003 0.000479967" />
+        <joint name="RL_hip_joint" class="abduction" />
+        <geom mesh="hip_0" material="metal" class="visual" quat="4.63268e-05 0 1 0" />
+        <geom mesh="hip_1" material="gray" class="visual" quat="4.63268e-05 0 1 0" />
+        <geom size="0.046 0.02" pos="0 0.08 0" quat="0.707107 0.707107 0 0" type="cylinder"
+          class="collision" />
+        <body name="RL_thigh" pos="0 0.0955 0">
+          <inertial pos="-0.00374 -0.0223 -0.0327" quat="0.829533 0.0847635 -0.0200632 0.551623"
+            mass="1.152"
+            diaginertia="0.00594973 0.00584149 0.000878787" />
+          <joint name="RL_thigh_joint" class="back_hip" />
+          <geom mesh="thigh_0" material="metal" class="visual" />
+          <geom mesh="thigh_1" material="gray" class="visual" />
+          <geom size="0.1065 0.01225 0.017" pos="0 0 -0.1065" quat="0.707107 0 0.707107 0"
+            type="box" class="collision" />
+          <body name="RL_calf" pos="0 0 -0.213">
+            <inertial pos="0.00629595 -0.000622121 -0.141417"
+              quat="0.710672 0.00154099 -0.00450087 0.703508"
+              mass="0.241352" diaginertia="0.0014901 0.00146356 5.31397e-05" />
+            <joint name="RL_calf_joint" class="knee" />
+            <geom mesh="calf_0" material="gray" class="visual" />
+            <geom mesh="calf_1" material="black" class="visual" />
+            <geom size="0.013 0.06" pos="0.01 0 -0.06" quat="0.995004 0 -0.0998334 0"
+              type="cylinder" class="collision" />
+            <geom size="0.011 0.0325" pos="0.02 0 -0.148" quat="0.999688 0 0.0249974 0"
+              type="cylinder" class="collision" />
+            <geom pos="0 0 -0.213" mesh="foot" class="visual" material="black" />
+            <geom name="RL" class="foot" />
+            <site name="RL" pos="-0.002 0 -0.213" type="sphere" size="0.022" group="5" />
+            <body name="RL_foot" pos="0 0 -0.213" />
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- 顺序 = body 树顺序 = FR,FL,RR,RL (每腿 hip,thigh,calf)。
+         与 qpos[7:] 同序, 使 env 的 action / ctrl / qpos 段可以逐下标对应。 -->
+    <position class="abduction" name="FR_hip" joint="FR_hip_joint" />
+    <position class="front_hip" name="FR_thigh" joint="FR_thigh_joint" />
+    <position class="knee" name="FR_calf" joint="FR_calf_joint" />
+
+    <position class="abduction" name="FL_hip" joint="FL_hip_joint" />
+    <position class="front_hip" name="FL_thigh" joint="FL_thigh_joint" />
+    <position class="knee" name="FL_calf" joint="FL_calf_joint" />
+
+    <position class="abduction" name="RR_hip" joint="RR_hip_joint" />
+    <position class="back_hip" name="RR_thigh" joint="RR_thigh_joint" />
+    <position class="knee" name="RR_calf" joint="RR_calf_joint" />
+
+    <position class="abduction" name="RL_hip" joint="RL_hip_joint" />
+    <position class="back_hip" name="RL_thigh" joint="RL_thigh_joint" />
+    <position class="knee" name="RL_calf" joint="RL_calf_joint" />
+  </actuator>
+
+  <sensor>
+    <gyro site="imu" name="gyro"/>
+    <velocimeter site="imu" name="local_linvel"/>
+    <accelerometer site="imu" name="accelerometer"/>
+    <framelinvel objtype="site" objname="imu" name="global_linvel"/>
+    <frameangvel objtype="site" objname="imu" name="global_angvel"/>
+    <framezaxis objtype="site" objname="imu" name="upvector"/>
+    <framelinvel objtype="site" objname="FR" name="FR_global_linvel"/>
+    <framelinvel objtype="site" objname="FL" name="FL_global_linvel"/>
+    <framelinvel objtype="site" objname="RR" name="RR_global_linvel"/>
+    <framelinvel objtype="site" objname="RL" name="RL_global_linvel"/>
+    <contact name="FR_floor_found" geom1="FR" geom2="floor" reduce="mindist" num="1" data="found"/>
+    <contact name="FL_floor_found" geom1="FL" geom2="floor" reduce="mindist" num="1" data="found"/>
+    <contact name="RR_floor_found" geom1="RR" geom2="floor" reduce="mindist" num="1" data="found"/>
+    <contact name="RL_floor_found" geom1="RL" geom2="floor" reduce="mindist" num="1" data="found"/>
+  </sensor>
+
+  <keyframe>
+    <!-- 关节顺序 = FR,FL,RR,RL x (hip,thigh,calf), 与 body 树/actuator 同序。
+         hip: FL/RL=+0.1, FR/RR=-0.1; 前腿 thigh 0.8 / 后腿 thigh 1.0; calf 全 -1.5。
+         z=0.32 稍高于沉降平衡 (实测 0.268), 让 reset 有个小落差。 -->
+    <key name="home" qpos="0 0 0.32 1 0 0 0 -0.1 0.8 -1.5 0.1 0.8 -1.5 -0.1 1.0 -1.5 0.1 1.0 -1.5"
+      ctrl="-0.1 0.8 -1.5 0.1 0.8 -1.5 -0.1 1.0 -1.5 0.1 1.0 -1.5"/>
+  </keyframe>
+</mujoco>

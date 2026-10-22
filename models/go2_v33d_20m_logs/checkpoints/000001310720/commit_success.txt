@@ -1,0 +1,1 @@
+Checkpoint commit was successful to /home/tc63/mujoco/mjx-go2-training/models/go2_v33d_20m_logs/checkpoints/000001310720

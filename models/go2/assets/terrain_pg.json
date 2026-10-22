@@ -1,0 +1,12 @@
+{
+  "source_png": "/home/tc63/mujoco/mjx-go1-getup/models/go2/external/playground_go1_hfield.png",
+  "n": 256,
+  "ext": 6.0,
+  "elevation_z": 0.05,
+  "cell_m": 0.046875,
+  "invert": false,
+  "h_min": 0.0,
+  "h_max": 0.05,
+  "h_mean": 0.02492660462386965,
+  "axis_convention": "png = flipud(H); 世界(x,y) == 输入图坐标(x,y)"
+}

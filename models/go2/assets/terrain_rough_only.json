@@ -1,0 +1,117 @@
+{
+  "n": 128,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "rough_only",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.07945950717124611,
+  "h_mean": 0.026166439387744232,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "hardness": 1.0,
+  "layout": [
+    {
+      "row": 0,
+      "col": 0,
+      "type": "rough",
+      "difficulty": 0.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.03719483186444927
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "type": "rough",
+      "difficulty": 0.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.03285277892596583
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "type": "rough",
+      "difficulty": 0.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.028908769408671833
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "type": "rough",
+      "difficulty": 0.5,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.056546790877543066
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "type": "rough",
+      "difficulty": 0.5,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.052479451721809706
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "type": "rough",
+      "difficulty": 0.5,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.05603204599682734
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "type": "rough",
+      "difficulty": 1.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.07904918003880956
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "type": "rough",
+      "difficulty": 1.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.07945950717124611
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "type": "rough",
+      "difficulty": 1.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.07118898377000064
+    }
+  ],
+  "elevation": 0.1,
+  "cell_m": 0.09375,
+  "prefix": "terrain_rough_only"
+}

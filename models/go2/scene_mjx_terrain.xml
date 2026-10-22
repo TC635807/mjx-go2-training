@@ -1,0 +1,66 @@
+<mujoco model="go2 terrain scene">
+  <!-- Go2 训练/可视化地形场景 (凹凸起伏 + 阶梯地形)。结构与 models/go1/scene_mjx_terrain.xml
+       一致, 只把 include 换成 go2_mjx_position.xml。
+
+       与 scene_mjx_position.xml (平地) 的唯一差别:
+         - worldbody 的 floor 从 `plane` 换成 `hfield` (引 assets/terrain.png)
+         - 加 rocky 贴图材质 (纯视觉)
+
+       关键约束 (改这里时必须保持):
+       1. **geom 名必须仍是 "floor"**: go2_mjx_position.xml 的 sensor 段有
+          `{FR,FL,RR,RL}_floor_found` (geom2="floor"), 改名会让四个足端接触
+          传感器全断 -> feet_air_time / feet_slip / 奖励全废。
+       2. **size 与 geom pos.z 必须成套标定**: 见下面 hfield 与 geom 两处注释。
+          换地形 (重跑 sim/gen_terrain_go2.py) 后 elevation_z 会变; 但
+          gen_terrain_go2 的 flatten_origin 保证原点 h(0,0)=0, 而 reset 正落在
+          原点, 所以 pos.z=0 天然对齐 (Go1 实测 Δ=+0.2mm; Go2 见报告复测)。
+       3. **floor 的 priority 必须为 0** (与平地场景一致), 否则接触参数语义
+          被改错 -> 策略崩坏。见 geom 注释。
+       4. **分辨率不能太高**: MuJoCo 每个 geom-hfield 对最多 50 个接触, 格距
+          太小会截断并刷 "height field collision overflow" (实测 n=384/3.1cm
+          会; n=128/9.4cm 不会)。故 gen_terrain_go2.py 默认 --n 128。
+       5. 地形生成是确定性的 (sim/gen_terrain_go2.py + 固定 seed), 训练与 view
+          载入同一个 PNG -> 严格一致。
+
+       用法:
+         /home/tc63/mujoco/.venv/bin/python sim/gen_terrain_go2.py   # 生成 + 自动同步 size
+         验证: sim/check_go2_model_contract.py --xml models/go2/scene_mjx_terrain.xml -->
+  <include file="go2_mjx_position.xml"/>
+
+  <statistic center="0 0 0.35" extent="2.2"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    <!-- 地形高度场: 16bit 灰度 PNG, 白=高。
+         size = "radius_x radius_y elevation_z base_z" (由 gen_terrain_go2.py 自动同步):
+           radius_xy   = 6      (gen_terrain_go2 的 ext, 半边长)
+           elevation_z = 0.3000 (生成时的 max height, 见 terrain.json)
+           base_z      = 0.0960 (必须为正: MuJoCo 拒绝 0; 只撑几何包围盒, 不影响形状,
+                                也不影响采样高度 —— Go1 用 mj_ray 实测过)
+         默认档 (128x128, 起伏 0.05m, 台阶 0.06m, 2 条 5 级阶梯) 总高差 0.30m。 -->
+    <hfield name="terrain" file="terrain.png" size="6 6 0.3000 0.0960"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <!-- 地形地板: 名字保持 "floor" (足端接触传感器依赖), 见文件头约束 1。
+         **pos.z=0 是标定值**: gen_terrain_go2 的 flatten_origin 保证原点
+         h(0,0)=0, 而 reset 的 home keyframe 正落在原点 -> 与平地场景天然对齐
+         (Go1 实测 Δ=+0.2mm)。若以后去掉 flatten_origin 就必须重标 pos.z。
+         **priority 必须为 0 (与平地 floor 一致)**: MuJoCo 接触参数规则 ——
+         两侧 priority 不同取高的一方 (足端=1); 若这里写 priority=1 则两侧同级
+         -> 摩擦/condim/solimp 全变 (Go1 实测 condim 3、friction 1.0),
+         足端抓地被改 -> 策略崩坏。 -->
+    <geom name="floor" type="hfield" hfield="terrain" material="groundplane"
+      pos="0 0 0" friction="1.0 0.02 0.01"/>
+  </worldbody>
+</mujoco>

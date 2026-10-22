@@ -1,0 +1,1 @@
+Checkpoint commit was successful to /home/tc63/mujoco/mjx-go1-getup/models/go2_v18h_warm/000000000000

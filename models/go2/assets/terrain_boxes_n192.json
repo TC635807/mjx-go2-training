@@ -1,0 +1,117 @@
+{
+  "n": 192,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "boxes_only",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.11413322783041012,
+  "h_mean": 0.016370457108536858,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "hardness": 1.0,
+  "layout": [
+    {
+      "row": 0,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 0.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.048734640644114466
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "type": "boxes",
+      "difficulty": 0.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.04959099413953673
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "type": "boxes",
+      "difficulty": 0.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.04908012184565638
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 0.5,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.08089149976653962
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "type": "boxes",
+      "difficulty": 0.5,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.08336778296122348
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "type": "boxes",
+      "difficulty": 0.5,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.08482401497083243
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "type": "boxes",
+      "difficulty": 1.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.11248756765064065
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "type": "boxes",
+      "difficulty": 1.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.11413322783041012
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "type": "boxes",
+      "difficulty": 1.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.11295605407598057
+    }
+  ],
+  "elevation": 0.15,
+  "cell_m": 0.0625,
+  "prefix": "terrain_boxes_n192"
+}

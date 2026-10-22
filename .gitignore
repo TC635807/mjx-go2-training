@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# ---- 训练产物 ----
+# 只入库交付档 v33d（pkl + checkpoints/best 与 5M 间隔）；其余实验档留在本机
+policies/*.pkl
+!policies/go2_walk_v33d.pkl
+models/go2_v*_logs/
+!models/go2_v33d_20m_logs/
+*.npz
+
+# 训练/评测日志：只保留 v33 交付那套（可复现 README 中的数字）
+logs/*
+!logs/go2_v33a_20m_train.log
+!logs/go2_v33b_20m_train.log
+!logs/go2_v33c_20m_train.log
+!logs/go2_v33d_20m_train.log
+!logs/v33_climb.tsv
+!logs/v33_sweep.tsv
+!logs/v29_final_climb.tsv
+!logs/final_climb.tsv
+logs/**/*.png
+logs/**/*.csv
+
+# 交互式观察器 / 临时探针产物
+*.log.tmp
+/tmp/

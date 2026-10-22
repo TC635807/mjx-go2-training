@@ -1,0 +1,49 @@
+{
+  "source_ckpt": "/home/tc63/mujoco/mjx-go1-getup/models/go2_v1_logs/checkpoints/000033030144",
+  "pkl": "/home/tc63/mujoco/mjx-go1-getup/policies/go2_walk_policy_v1_soft33M.pkl",
+  "note": "v1 软接触 (condim=3, warp 2/5 迭代) 40M 计划的 33M 检查点; 训练被 CUDA OOM 打断。平地 100% 存活/跟踪误差 0.083 m/s; 地形档差 (warp 中位存活 662 步, CPU 128 步)。保留作为回退。",
+  "ppo_network_config": {
+    "action_size": 12,
+    "network_factory_kwargs": {
+      "activation": "tanh",
+      "distribution_type": "normal",
+      "init_noise_std": 1.0,
+      "mean_clip_scale": null,
+      "mean_kernel_init_fn": null,
+      "mean_kernel_init_kwargs": null,
+      "noise_std_type": "scalar",
+      "num_quantiles": 32,
+      "policy_hidden_layer_sizes": [
+        128,
+        128
+      ],
+      "policy_network_kernel_init_fn": "lecun_uniform",
+      "policy_network_kernel_init_kwargs": null,
+      "policy_obs_key": "state",
+      "state_dependent_std": false,
+      "use_distributional_critic": false,
+      "value_hidden_layer_sizes": [
+        128,
+        128
+      ],
+      "value_network_kernel_init_fn": "lecun_uniform",
+      "value_network_kernel_init_kwargs": null,
+      "value_obs_key": "privileged_state"
+    },
+    "normalize_observations": false,
+    "observation_size": {
+      "privileged_state": {
+        "shape": [
+          162
+        ],
+        "dtype": "unserializable object: float32"
+      },
+      "state": {
+        "shape": [
+          91
+        ],
+        "dtype": "unserializable object: float32"
+      }
+    }
+  }
+}

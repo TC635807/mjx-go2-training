@@ -1,0 +1,7 @@
+policy	terrain	n	steps	surv	climb_mean	climb_p50	climb_p90	frac_gt10	frac_gt20	frac_gt30	vx
+go2_v25b_cons_logs	bands2	128	300	61.7	0.013	0.01	0.026	0.0	0.0	0.0	0.135
+go2_v28a1b_hip_logs	bands2	128	300	50.8	0.014	0.01	0.029	0.0	0.0	0.0	0.121
+go2_v28c_cons_logs	bands2	128	300	46.9	0.016	0.011	0.03	0.0	0.0	0.0	0.105
+go2_v25b_cons_logs	bands_e2	128	300	71.1	0.034	0.029	0.061	2.2	0.0	0.0	0.159
+go2_v28a1b_hip_logs	bands_e2	128	300	43.0	0.034	0.031	0.069	1.8	0.0	0.0	0.133
+go2_v28c_cons_logs	bands_e2	128	300	49.2	0.048	0.041	0.089	4.8	0.0	0.0	0.136

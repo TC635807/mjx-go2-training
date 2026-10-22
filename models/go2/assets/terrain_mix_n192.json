@@ -1,0 +1,15 @@
+{
+  "n": 192,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "mix",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.25,
+  "h_mean": 0.044508643295421896,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "elevation": 0.25,
+  "cell_m": 0.0625,
+  "prefix": "terrain_mix_n192"
+}

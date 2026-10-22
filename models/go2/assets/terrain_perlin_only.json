@@ -1,0 +1,117 @@
+{
+  "n": 128,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "perlin_only",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.11837291539816876,
+  "h_mean": 0.05005131707000278,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "hardness": 1.0,
+  "layout": [
+    {
+      "row": 0,
+      "col": 0,
+      "type": "perlin",
+      "difficulty": 0.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.04781819762309321
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "type": "perlin",
+      "difficulty": 0.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.04741163121140337
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "type": "perlin",
+      "difficulty": 0.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.044634326980354605
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "type": "perlin",
+      "difficulty": 0.5,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.08061231614450846
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "type": "perlin",
+      "difficulty": 0.5,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.07835415001571076
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "type": "perlin",
+      "difficulty": 0.5,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.07322828809535158
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "type": "perlin",
+      "difficulty": 1.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.11837291539816876
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "type": "perlin",
+      "difficulty": 1.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.10995632531859338
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "type": "perlin",
+      "difficulty": 1.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.10047562302675937
+    }
+  ],
+  "elevation": 0.15,
+  "cell_m": 0.09375,
+  "prefix": "terrain_perlin_only"
+}

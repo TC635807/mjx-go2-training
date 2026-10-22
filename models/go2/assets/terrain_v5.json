@@ -1,0 +1,117 @@
+{
+  "n": 128,
+  "ext": 6.0,
+  "patch_m": 4.0,
+  "patches": 3,
+  "preset": "v5",
+  "seed": 1,
+  "h_min": 0.0,
+  "h_max": 0.32,
+  "h_mean": 0.08198545571008939,
+  "axis_convention": "png = flipud(h.T); 世界(x,y) == 生成器(x,y)",
+  "hardness": 1.5,
+  "layout": [
+    {
+      "row": 0,
+      "col": 0,
+      "type": "stairs",
+      "difficulty": 0.3,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.24
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "type": "slope",
+      "difficulty": 0.3,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.20400000000000001
+    },
+    {
+      "row": 0,
+      "col": 2,
+      "type": "stairs",
+      "difficulty": 0.3,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -6.0,
+      "y1": -2.0,
+      "h_max_patch": 0.24
+    },
+    {
+      "row": 1,
+      "col": 0,
+      "type": "slope",
+      "difficulty": 0.6,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.258
+    },
+    {
+      "row": 1,
+      "col": 1,
+      "type": "flat",
+      "difficulty": 0.6,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.0
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "type": "stairs",
+      "difficulty": 0.6,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": -2.0,
+      "y1": 2.0,
+      "h_max_patch": 0.24
+    },
+    {
+      "row": 2,
+      "col": 0,
+      "type": "slope",
+      "difficulty": 1.0,
+      "x0": -6.0,
+      "x1": -2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.32
+    },
+    {
+      "row": 2,
+      "col": 1,
+      "type": "rough",
+      "difficulty": 1.0,
+      "x0": -2.0,
+      "x1": 2.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.12450401033964084
+    },
+    {
+      "row": 2,
+      "col": 2,
+      "type": "stairs",
+      "difficulty": 1.0,
+      "x0": 2.0,
+      "x1": 6.0,
+      "y0": 2.0,
+      "y1": 6.0,
+      "h_max_patch": 0.24
+    }
+  ],
+  "elevation": 0.35,
+  "cell_m": 0.09375,
+  "prefix": "terrain_v5"
+}
