@@ -1,1 +1,0 @@
-Checkpoint commit was successful to /home/tc63/mujoco/mjx-go1-getup/models/go2_v6a_smoke/checkpoints/000000204800

@@ -8,7 +8,7 @@ __pycache__/
 # 只入库交付档 v33d（pkl + checkpoints/best 与 5M 间隔）；其余实验档留在本机
 policies/*.pkl
 !policies/go2_walk_v33d.pkl
-models/go2_v*_logs/
+models/go2_*/
 !models/go2_v33d_20m_logs/
 *.npz
 
